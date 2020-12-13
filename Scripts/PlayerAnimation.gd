@@ -37,14 +37,14 @@ func _process(delta):
 		blink_time = 0
 	blink_time += 1
 	time += 1
-#	if Input.is_key_pressed(KEY_RIGHT):
-#		current_anim = ANIMS.running
-#		if !pastuff:
-#			time = 0.0
-#			pastuff = true
-#	else:
-#		current_anim = ANIMS.idle
-#		pastuff = false
+	if Input.is_key_pressed(KEY_RIGHT):
+		current_anim = ANIMS.running
+		if !pastuff:
+			time = 0.0
+			pastuff = true
+	else:
+		current_anim = ANIMS.idle
+		pastuff = false
 	
 	Head.global_position = Body.global_position + Vector2(cos(Body.rotation), sin(Body.rotation)).rotated(PI/2 * 3) * 22 + Vector2(3, 0)
 	FrontArm.global_position = Body.global_position + Vector2(cos(Body.rotation - 0.02), sin(Body.rotation)).rotated(PI/2 * 3) * 18
@@ -53,10 +53,10 @@ func _process(delta):
 		ANIMS.idle:
 			FrontFoot.rotation = move_toward(FrontFoot.rotation, 0, 0.5)
 			BackFoot.rotation = move_toward(BackFoot.rotation, 0, 0.5)
-			FrontLeg.go_to = Vector2(-10, 30) - position
-			BackLeg.go_to = Vector2(10, 30) - position
-			FrontArm.go_to = Vector2(-3 + ((sin(time * 0.1) *1) - position.y)/2, 5 - ((sin(time * 0.1) *1) - position.y)/2) - position
-			BackArm.go_to = Vector2(12 + ((sin(time * 0.1) *1) - position.y)/2, -4 - ((sin(time * 0.1) *1) - position.y)/2) - position
+			FrontLeg.go_to = Vector2(-10, 30) 
+			BackLeg.go_to = Vector2(10, 30)
+			FrontArm.go_to = Vector2(-3 + (sin(time * 0.04) *1), 5 - (sin(time * 0.1) *1))
+			BackArm.go_to = Vector2(12 + (sin(time * 0.05) *1), -4 - (sin(time * 0.1) *1))
 			
 			position.y += (abs(sin(time * 0.1) * 2) - position.y)/2
 			position.x += (abs(sin(time * 0.1) * 2) - position.y)/2
@@ -120,7 +120,6 @@ func _process(delta):
 			last_pos = get_parent().position
 			
 		ANIMS.nlight:
-			# i really have to fix this but im laaazy
 			Body.rotation = move_toward(Body.rotation, -1, 0.5)
 			FrontLeg.position.x = move_toward(FrontLeg.position.x, 0, 5)
 			BackLeg.position.x = move_toward(FrontLeg.position.x, 0, 5)
@@ -128,8 +127,8 @@ func _process(delta):
 			BackArm.go_to = BackArm.go_to.move_toward(Vector2(-10,10) - position, 10)
 			BackLeg.go_to = BackLeg.go_to.move_toward(Vector2(10, -10) - Vector2.UP - position, 10)
 		
-	FrontFoot.position += ((FrontLeg.go_to + position) - FrontFoot.position) - position
-	BackFoot.position += ((BackLeg.go_to + position) - BackFoot.position) - position
+	FrontFoot.position += ((FrontLeg.go_to) - FrontFoot.position) - position
+	BackFoot.position += ((BackLeg.go_to) - BackFoot.position) - position
 
 
 func _on_Head_animation_finished():

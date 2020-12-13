@@ -14,4 +14,17 @@ func _process(delta):
 		go_to = go_to.normalized() * 20
 		go_dist = 20
 	
-	frame = move_toward(frame, 19 - clamp(int(go_dist), 19, 13), 1)
+	if go_dist >= 19.0:
+		frame = move_toward(frame, 0, 1)
+	elif go_dist >= 18.0:
+		frame = move_toward(frame, 1, 1)
+	elif go_dist >= 17.0:
+		frame = move_toward(frame, 2, 1)
+	elif go_dist >= 16.0:
+		frame = move_toward(frame, 3, 1)
+	elif go_dist >= 15.0:
+		frame = move_toward(frame, 4, 1)
+	elif go_dist >= 14.0:
+		frame = move_toward(frame, 5, 1)
+	else:
+		frame = move_toward(frame, 6, 1)
