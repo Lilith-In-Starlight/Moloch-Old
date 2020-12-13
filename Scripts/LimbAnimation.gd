@@ -10,9 +10,6 @@ func _process(delta):
 	rotation = angle_vec.slerp(go_angle_vec, 0.5).angle()
 	
 	var go_dist := global_position.distance_to(go_to + get_parent().get_parent().position)
-	if go_dist > 20:
-		go_to = go_to.normalized() * 20
-		go_dist = 20
 	
 	if go_dist >= 19.0:
 		frame = move_toward(frame, 0, 1)

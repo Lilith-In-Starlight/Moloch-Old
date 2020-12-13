@@ -28,6 +28,8 @@ var blink_time := 0
 var time_blink := 50
 var last_pos := Vector2(0, 0)
 
+func _ready():
+	last_pos = get_parent().position
 
 func _process(delta):
 	if blink_time > time_blink:
@@ -37,14 +39,6 @@ func _process(delta):
 		blink_time = 0
 	blink_time += 1
 	time += 1
-	if Input.is_key_pressed(KEY_RIGHT):
-		current_anim = ANIMS.running
-		if !pastuff:
-			time = 0.0
-			pastuff = true
-	else:
-		current_anim = ANIMS.idle
-		pastuff = false
 	
 	Head.global_position = Body.global_position + Vector2(cos(Body.rotation), sin(Body.rotation)).rotated(PI/2 * 3) * 22 + Vector2(3, 0)
 	FrontArm.global_position = Body.global_position + Vector2(cos(Body.rotation - 0.02), sin(Body.rotation)).rotated(PI/2 * 3) * 18
@@ -74,8 +68,8 @@ func _process(delta):
 			position.x += (0 - position.x)/2
 			var running_slowness := 0.09
 			var slowness_running := 1/running_slowness
-			var speedness := 5
-			var speedness2 := 5
+			var speedness := 8
+			var speedness2 := 8
 			
 			Body.rotation = move_toward(Body.rotation, 0.15, 0.12)
 			Head.rotation = sin(time * 0.3) * 0.05
@@ -117,6 +111,39 @@ func _process(delta):
 			FrontFoot.rotation = FrontLeg.rotation
 			BackFoot.rotation = BackLeg.rotation
 			Body.rotation = move_toward(Body.rotation, (last_pos - get_parent().position).angle() - PI/2, 0.01)
+			last_pos = get_parent().position
+			
+		ANIMS.falling:
+			position.x += (0 - position.x)/2
+			position.y = move_toward(position.y, 5, 0.5)
+			Body.rotation = 0
+			Head.rotation += (0.3 - Head.rotation)/5
+			FrontLeg.position.x = move_toward(FrontLeg.position.x, -3, 2)
+			BackLeg.position.x = move_toward(BackLeg.position.x, 5, 2)
+			BackLeg.go_to = BackLeg.go_to.move_toward(Vector2(6, 25), 2)
+			FrontLeg.go_to = FrontLeg.go_to.move_toward(Vector2(-6, 30), 5)
+			
+			BackArm.go_to += last_pos - get_parent().position
+			FrontArm.go_to += last_pos - get_parent().position
+			
+			if BackArm.go_to.y < 3:
+				BackArm.go_to.y = 3
+			if FrontArm.go_to.y < 3:
+				FrontArm.go_to.y = 3
+			last_pos = get_parent().position
+			
+		ANIMS.jumping:
+			position.x += (0 - position.x)/2
+			position.y = move_toward(position.y, 0.3, 0.1)
+			Body.rotation = 0
+			Head.rotation += (-0.3 - Head.rotation)/3
+			FrontLeg.position.x = move_toward(FrontLeg.position.x, -3, 2)
+			BackLeg.position.x = move_toward(BackLeg.position.x, 5, 2)
+			BackLeg.go_to = BackLeg.go_to.move_toward(Vector2(6, 31), 5)
+			FrontLeg.go_to = FrontLeg.go_to.move_toward(Vector2(-6, 31), 5)
+			
+			BackArm.go_to += last_pos - get_parent().position
+			FrontArm.go_to += last_pos - get_parent().position
 			last_pos = get_parent().position
 			
 		ANIMS.nlight:
